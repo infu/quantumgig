@@ -1,33 +1,29 @@
-import {
-    CanisterResult,
-    ExternalCanister,
-    query,
-    update,Variant
-} from 'azle';
+
+import { CallResult, Service, serviceQuery, serviceUpdate,Variant,Record,Vec } from 'azle';
 
 export type Error = Variant<{
     InvalidCanister : null,
     CanisterError : CanisterError
 }>;
 
-export type CanisterError = Variant<{
+export type CanisterError = Record<{
     message : string;
 }>;
 
 export type ExecutionResult = Variant<{
-    ok : null,
-    err : Error
+    Ok : null,
+    Err : Error
 }>;
 
 export type QueryResult = Variant<{
-    ok : string[][];
-    err : Error;
+    Ok : Vec<Vec<string>>;
+    Err : Error;
 }>;
 
-export class SqlCanister extends ExternalCanister {
-    @query
-    query: (message: string) => CanisterResult<QueryResult>;
+export class SqlCanister extends Service {
+    @serviceQuery
+    query: (message: string) => CallResult<QueryResult>;
 
-    @update
-    execute: (message: string) => CanisterResult<ExecutionResult>;
+    @serviceUpdate
+    execute: (message: string) => CallResult<ExecutionResult>;
 }
